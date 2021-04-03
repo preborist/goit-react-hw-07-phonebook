@@ -1,0 +1,7 @@
+.ContactList {
+  margin-left: 30px;
+  max-width: 300px;
+}
+.ContactList__item:not(:last-child) {
+  margin-bottom: 10px;
+}

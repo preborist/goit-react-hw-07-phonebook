@@ -3,19 +3,16 @@ import Contact from './Contact';
 import Filter from './Filter';
 import PropTypes from 'prop-types';
 import './ContactList.scss';
+import { connect } from 'react-redux';
+import * as phonebookOperations from '../../redux/phonebook/phonebook-operations';
+import * as phonebookSelectors from '../../redux/phonebook/contacts-selectors';
 
-const ContactsList = ({
-  contacts,
-  // inputFilterName,
-  // changeFilter,
-  onHandleDelete,
-}) => {
+const ContactsList = ({ filteredContacts, onHandleDelete }) => {
   return (
     <>
-      {/* <Filter inputFilterName={inputFilterName} changeFilter={changeFilter} /> */}
       <Filter />
       <ul className="ContactList">
-        {contacts.map(({ id, name, number }) => (
+        {filteredContacts.map(({ id, name, number }) => (
           <li className="ContactList__item" key={id}>
             <Contact
               id={id}
@@ -31,10 +28,16 @@ const ContactsList = ({
 };
 
 ContactsList.propTypes = {
-  contacts: PropTypes.array.isRequired,
-  inputFilterName: PropTypes.string,
-  changeFilter: PropTypes.func,
+  filteredContacts: PropTypes.array.isRequired,
   onHandleDelete: PropTypes.func,
 };
 
-export default ContactsList;
+const mapStateToProps = state => ({
+  filteredContacts: phonebookSelectors.getFilteredContacts(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+  onHandleDelete: id => dispatch(phonebookOperations.deleteContact(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactsList);
